@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const grid = document.querySelector(".grid");
+  const scoreDisplay = document.getElementById("score");
   const width = 8;
   const squares = [];
   let score = 0;
@@ -86,6 +87,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Menurunkan stack ketika terjadi kekosongan
+  function moveDownStack() {
+    for (i = 0; i < 55; i++) {
+      if (squares[i + width].style.backgroundColor === "") {
+        // proses penurunan square di tumpukan atas
+        squares[i + width].style.backgroundColor = squares[i].style.backgroundColor;
+        squares[i].style.backgroundColor = "";
+
+        // proses generate random stack baru untuk mengisi ulang kekosongan
+        const firstRow = [0, 1, 2, 3, 4, 5, 6, 7];
+        const isFirstRow = firstRow.includes(i);
+        if (isFirstRow && squares[i].style.backgroundColor === "") {
+          let randomColor = Math.floor(Math.random() * proLangs.length);
+          squares[i].style.backgroundColor = proLangs[randomColor];
+        }
+      }
+    }
+  }
+
   // Kecocokan warna
   // cek baris dengan 4 match
   function checkRowForFour() {
@@ -100,6 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // periksa apakah terdapat 4 warna yang sama dengan acuannya decidedColor
       if (rowOfFour.every((index) => squares[index].style.backgroundColor === decidedColor && !isBlank)) {
         score += 4;
+        scoreDisplay.innerHTML = score;
         rowOfFour.forEach((index) => {
           squares[index].style.backgroundColor = "";
         });
@@ -118,6 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // periksa apakah terdapat 4 warna yang sama dengan acuannya decidedColor
       if (columnOfFour.every((index) => squares[index].style.backgroundColor === decidedColor && !isBlank)) {
         score += 4;
+        scoreDisplay.innerHTML = score;
         columnOfFour.forEach((index) => {
           squares[index].style.backgroundColor = "";
         });
@@ -139,6 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // periksa apakah terdapat 3 warna yang sama dengan acuannya decidedColor
       if (rowOfThree.every((index) => squares[index].style.backgroundColor === decidedColor && !isBlank)) {
         score += 3;
+        scoreDisplay.innerHTML = score;
         rowOfThree.forEach((index) => {
           squares[index].style.backgroundColor = "";
         });
@@ -157,6 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // periksa apakah terdapat 3 warna yang sama dengan acuannya decidedColor
       if (columnOfThree.every((index) => squares[index].style.backgroundColor === decidedColor && !isBlank)) {
         score += 3;
+        scoreDisplay.innerHTML = score;
         columnOfThree.forEach((index) => {
           squares[index].style.backgroundColor = "";
         });
@@ -166,6 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
   checkColumnForThree();
 
   window.setInterval(function () {
+    moveDownStack();
     checkRowForFour();
     checkColumnForFour();
     checkRowForThree();
