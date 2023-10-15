@@ -87,6 +87,45 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Kecocokan warna
+  // cek baris dengan 4 match
+  function checkRowForFour() {
+    for (i = 0; i < 60; i++) {
+      let rowOfFour = [i, i + 1, i + 2, i + 3];
+      let decidedColor = squares[i].style.backgroundColor;
+      const isBlank = squares[i].style.backgroundColor === "";
+
+      const notValid = [5, 6, 7, 13, 14, 15, 21, 22, 23, 29, 30, 31, 37, 38, 39, 45, 46, 47, 53, 54, 55];
+      if (notValid.includes(i)) continue;
+
+      // periksa apakah terdapat 4 warna yang sama dengan acuannya decidedColor
+      if (rowOfFour.every((index) => squares[index].style.backgroundColor === decidedColor && !isBlank)) {
+        score += 4;
+        rowOfFour.forEach((index) => {
+          squares[index].style.backgroundColor = "";
+        });
+      }
+    }
+  }
+  checkRowForFour();
+
+  // cek kolom dengan 4 match
+  function checkColumnForFour() {
+    for (i = 0; i < 39; i++) {
+      let columnOfFour = [i, i + width, i + width * 2, i + width * 3];
+      let decidedColor = squares[i].style.backgroundColor;
+      const isBlank = squares[i].style.backgroundColor === "";
+
+      // periksa apakah terdapat 4 warna yang sama dengan acuannya decidedColor
+      if (columnOfFour.every((index) => squares[index].style.backgroundColor === decidedColor && !isBlank)) {
+        score += 4;
+        columnOfFour.forEach((index) => {
+          squares[index].style.backgroundColor = "";
+        });
+      }
+    }
+  }
+  checkColumnForFour();
+
   // cek baris dengan 3 match
   function checkRowForThree() {
     for (i = 0; i < 61; i++) {
@@ -127,6 +166,8 @@ document.addEventListener("DOMContentLoaded", () => {
   checkColumnForThree();
 
   window.setInterval(function () {
+    checkRowForFour();
+    checkColumnForFour();
     checkRowForThree();
     checkColumnForThree();
   }, 100);
