@@ -1,3 +1,40 @@
+#login-form,
+#signup-form {
+  margin-top: 100px;
+  margin-bottom: 20px;
+}
+
+input {
+  margin-bottom: 10px;
+  padding: 5px;
+}
+
+button {
+  padding: 8px 20px;
+  cursor: pointer;
+}
+
+/* Warna tautan saat belum ditekan */
+#signup-link,
+#login-link {
+  color: blue; /* Ganti dengan warna tautan asli */
+  margin-left: 540px;
+}
+
+/* Warna tautan saat ditekan */
+#signup-link:active {
+  color: green; /* Ganti dengan warna tautan saat ditekan */
+}
+
+#login-form input,
+#signup-form input,
+#login-form button,
+#signup-form button {
+  display: block;
+  margin-bottom: 10px; /* Memberikan ruang di antara elemen formulir */
+  margin: 10px auto;
+}
+
 .grid {
   height: 560px;
   width: 560px;
@@ -8,4 +45,8 @@
 .grid div {
   height: 70px;
   width: 70px;
+}
+
+.hud {
+  display: flex;
 }

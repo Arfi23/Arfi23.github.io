@@ -1,6 +1,183 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const loginForm = document.getElementById("login-form");
+  const signupForm = document.getElementById("signup-form");
+  const game = document.querySelector(".game");
   const grid = document.querySelector(".grid");
+  const gameover = document.querySelector(".game-over");
   const scoreDisplay = document.getElementById("score");
+  const scoreGameOver = document.getElementById("final-score");
+  const logoutButton = document.getElementById("logout-button");
+
+  // Fungsi untuk menampilkan halaman permainan dan menyembunyikan formulir
+  function showGamePage() {
+    loginForm.style.display = "none";
+    signupForm.style.display = "none";
+    game.style.display = "block";
+  }
+
+  function postData(url, data) {
+    return fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }).then(function (response) {
+      return response.json();
+    });
+  }
+
+  function login() {
+    var email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    const loginData = {
+      email: email,
+      password: password,
+    };
+
+    postData("https://ets-pemrograman-web-f.cyclic.app/users/login", loginData)
+      .then(function (response) {
+        alert("Data login dari API");
+        console.log(response);
+        // Simpan login state ke localStorage saat login berhasil
+        localStorage.setItem("isLoggedIn", "true");
+        showGamePage();
+      })
+      .catch(function (error) {
+        console.error("Error during login:", error);
+      });
+  }
+  document.getElementById("login-link").addEventListener("click", login);
+
+  logoutButton.addEventListener("click", logout);
+  // Fungsi untuk logout
+  function logout() {
+    // Hapus login state dari localStorage
+    localStorage.removeItem("isLoggedIn");
+    // Tampilkan formulir login setelah logout
+    showLoginForm();
+  }
+  // Menambahkan event listener ke tombol logout
+  logoutButton.addEventListener("click", logout);
+
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
+  if (isLoggedIn === "true") {
+    showGamePage();
+  } else {
+    showLoginForm();
+  }
+
+  // Fungsi ketika tombol Signup di-klik
+  function signup() {
+    var newUsername = document.getElementById("new-username").value;
+    var newEmail = document.getElementById("new-email").value;
+    var newPassword = document.getElementById("new-password").value;
+
+    // Validasi Email
+    var emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if (!emailRegex.test(newEmail)) {
+      alert("Email tidak valid. Gunakan format email yang benar.");
+      return;
+    }
+
+    // Validasi Password
+    var passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W).{4,}$/;
+    if (!passwordRegex.test(newPassword)) {
+      alert("Password tidak memenuhi kriteria. Pastikan ada minimal 1 huruf besar, 1 huruf kecil, 1 angka, dan 1 simbol.");
+      return;
+    }
+
+    // Validasi Nama
+    if (newUsername.trim() === "") {
+      alert("Nama tidak boleh kosong.");
+      return;
+    }
+
+    const signupData = {
+      nama: newUsername,
+      email: newEmail,
+      password: newPassword,
+    };
+
+    postData("https://ets-pemrograman-web-f.cyclic.app/users/register", signupData)
+      .then(function (response) {
+        // Handle response from the API (e.g., display message, redirect to another page)
+        alert("Data terkirim ke API");
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.error("Error during signup:", error);
+      });
+
+    alert("Account created for username " + newUsername);
+    showLoginForm();
+  }
+  // Fungsi untuk menampilkan form signup
+  function showSignupForm() {
+    loginForm.style.display = "none";
+    gameover.style.display = "none";
+    signupForm.style.display = "block";
+  }
+  // Fungsi untuk menampilkan form login
+  function showLoginForm() {
+    loginForm.style.display = "block";
+    gameover.style.display = "none";
+    signupForm.style.display = "none";
+
+    // Cek apakah pengguna sudah login sebelumnya
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    if (isLoggedIn === "true") {
+      // Jika sudah login sebelumnya, langsung tampilkan halaman permainan
+      showGamePage();
+    }
+  }
+  document.getElementById("signup-link").addEventListener("click", showSignupForm);
+  document.getElementById("login-link").addEventListener("click", showLoginForm);
+
+  // Menambahkan event listener ke login button
+  document.querySelector("#login-form button").addEventListener("click", login);
+
+  // Menambahkan event listener ke signup button
+  document.querySelector("#signup-form button").addEventListener("click", signup);
+
+  function showGameOver() {
+    clearInterval(timerInterval);
+    game.style.display = "none";
+    gameover.style.display = "block";
+    scoreGameOver.innerHTML = score;
+  }
+
+  // Countdown Timer
+  const timerDisplay = document.getElementById("timer");
+  let timeLeft = 120; // waktu dalam detik (misalnya 3600 detik untuk 1 jam)
+
+  // Fungsi untuk mengupdate dan menampilkan sisa waktu dalam format MM:SS
+  function updateTimer() {
+    const minutes = Math.floor(timeLeft / 60);
+    let seconds = timeLeft % 60;
+    // Menambahkan 0 di depan angka tunggal untuk format MM:SS
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+    timerDisplay.innerHTML = minutes + ":" + seconds;
+    timeLeft--;
+
+    // Cek apakah waktu sudah habis
+    if (timeLeft < 0) {
+      endGame(); // Panggil fungsi endGame() ketika waktu habis
+      // showGameOver();
+    }
+  }
+
+  // Memulai countdown timer setiap 1 detik
+  const timerInterval = setInterval(updateTimer, 1000);
+
+  function endGame() {
+    clearInterval(timerInterval); // Hentikan interval timer
+    // alert("Game Over! Your final score is: " + score); // Tampilkan skor akhir
+    showGameOver();
+    // Tambahkan logika penyimpanan skor dan nama pemain di sini (misalnya menggunakan localStorage)
+  }
+
   const width = 8;
   const squares = [];
   let score = 0;

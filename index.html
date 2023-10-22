@@ -10,11 +10,58 @@
     <script src="app.js" charset="UTF-8"></script>
   </head>
   <body>
-    <div class="score-board">
-      <h3 class="ms-4 text-success">Score</h3>
-      <h1 class="ms-4" id="score"></h1>
+    <div class="container">
+      <!-- Login Form -->
+      <div id="login-form">
+        <h2 class="text-center mt-3">Login</h2>
+        <input type="email" id="email" placeholder="Email" />
+        <input type="password" id="password" placeholder="Password" />
+        <button onclick="login()">Login</button>
+        <br />
+        <a href="#" id="signup-link" onclick="showSignupForm()">Belum punya akun? Daftar di sini.</a>
+      </div>
+      <!-- EndOf Login Form -->
+
+      <!-- Signup Form -->
+      <div id="signup-form" style="display: none">
+        <h2 class="text-center mt-3">Sign Up</h2>
+        <input type="text" id="new-username" placeholder="Username" />
+        <input type="email" id="new-email" placeholder="Email" />
+        <input type="password" id="new-password" placeholder="Password" />
+        <button onclick="signup()">Sign Up</button>
+        <br />
+        <a href="#" id="login-link" onclick="showLoginForm()">Login disini</a>
+      </div>
+      <!-- EndOf Signup Form -->
+
+      <!-- Game -->
+      <div class="game" style="display: none">
+        <div class="hud">
+          <!-- Score Board -->
+          <div class="score-board">
+            <h3 class="ms-4 text-success">Score</h3>
+            <h1 class="ms-4" id="score"></h1>
+          </div>
+          <!-- Countdown Timer -->
+          <div class="timer">
+            <h3 class="ms-4 text-danger">Time Left</h3>
+            <h1 class="ms-4" id="timer"></h1>
+          </div>
+        </div>
+        <hr />
+        <!-- Game Grid -->
+        <div class="grid ms-4"></div>
+      </div>
+
+      <!-- Game Over Screen -->
+      <div class="game-over" style="display: none">
+        <h3>Your Final Score</h3>
+        <h1 id="final-score"></h1>
+      </div>
+      <!-- EndOf Game Over Screen -->
+
+      <!-- Tombol Logout -->
+      <button id="logout-button">Logout</button>
     </div>
-    <hr />
-    <div class="grid ms-4"></div>
   </body>
 </html>
