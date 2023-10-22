@@ -27,6 +27,26 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Menambahkan getUser data (tetapi belum berhasil)
+  function getUserData() {
+    fetch("localhost:9001/users/profile", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (data) {
+        // Handle data response here
+        console.log("Data user dari API:", data);
+      })
+      .catch(function (error) {
+        console.error("Error fetching user data:", error);
+      });
+  }
+
   function login() {
     var email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
@@ -43,6 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Simpan login state ke localStorage saat login berhasil
         localStorage.setItem("isLoggedIn", "true");
         showGamePage();
+        getUserData();
       })
       .catch(function (error) {
         console.error("Error during login:", error);
